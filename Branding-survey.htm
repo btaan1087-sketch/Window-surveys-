@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استبيان تصميم الهويات - ويندو</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0D5C4A 0%, #0a4839 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .form-content {
+            padding: 40px 30px;
+        }
+        
+        .section-title {
+            color: #0D5C4A;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: #0D5C4A;
+            border-radius: 2px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #0D5C4A;
+            box-shadow: 0 0 0 3px rgba(13, 92, 74, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        
+        .radio-item:hover,
+        .checkbox-item:hover {
+            background: #f5f5f5;
+        }
+        
+        input[type="radio"],
+        input[type="checkbox"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #0D5C4A;
+        }
+        
+        .checkbox-item label,
+        .radio-item label {
+            margin: 0;
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #0D5C4A 0%, #0a4839 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 92, 74, 0.3);
+        }
+        
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #0D5C4A;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #0D5C4A;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 استبيان تصميم الهويات</h1>
+            <p>ساعدنا نفهم احتياجات علامتك لنقدم لك التصميم الأمثل</p>
+        </div>
+        
+        <div class="form-content">
+            <div class="success-message" id="successMsg">✅ شكراً لك! تم استقبال بياناتك بنجاح. سنتواصل معك قريباً.</div>
+            <div class="error-message" id="errorMsg"></div>
+            <div class="loading" id="loading"><div class="spinner"></div> جاري الإرسال...</div>
+            
+            <form id="surveyForm">
+                <div class="section-title">📋 المعلومات الأساسية</div>
+                
+                <div class="form-group">
+                    <label for="businessName">اسم العمل/الشركة *</label>
+                    <input type="text" id="businessName" name="businessName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>نوع المجال *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="field1" name="field" value="تجارة إلكترونية" required>
+                            <label for="field1">تجارة إلكترونية</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="field2" name="field" value="خدمات">
+                            <label for="field2">خدمات</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="field3" name="field" value="منتجات">
+                            <label for="field3">منتجات</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="field4" name="field" value="غير ذلك">
+                            <label for="field4">غير ذلك</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>هل لديك هوية بصرية حالياً؟ *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="identity1" name="identity" value="نعم" required>
+                            <label for="identity1">نعم</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="identity2" name="identity" value="لا">
+                            <label for="identity2">لا</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="identity3" name="identity" value="بدائية/تحتاج تطوير">
+                            <label for="identity3">بدائية/تحتاج تطوير</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-title">🎨 الرؤية التصميمية</div>
+                
+                <div class="form-group">
+                    <label for="colors">الألوان المفضلة لعلامتك</label>
+                    <textarea id="colors" name="colors" placeholder="مثال: أزرق داكن، أبيض، مع لمسات ذهبية"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>الأسلوب المرغوب *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="style1" name="style" value="عصري ومبتكر" required>
+                            <label for="style1">عصري ومبتكر</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="style2" name="style" value="كلاسيكي واحترافي">
+                            <label for="style2">كلاسيكي واحترافي</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="style3" name="style" value="بسيط وودود">
+                            <label for="style3">بسيط وودود</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="style4" name="style" value="فاخر ورقيق">
+                            <label for="style4">فاخر ورقيق</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="audience">من هو جمهورك المستهدف؟ *</label>
+                    <textarea id="audience" name="audience" placeholder="مثال: نساء عاملات، 25-45 سنة، مهتمات بالعناية الشخصية" required></textarea>
+                </div>
+                
+                <div class="section-title">💼 التفاصيل والميزانية</div>
+                
+                <div class="form-group">
+                    <label>ما الخدمات المطلوبة؟ *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service1" name="services" value="تصميم الشعار">
+                            <label for="service1">تصميم الشعار</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service2" name="services" value="دليل الهوية البصرية">
+                            <label for="service2">دليل الهوية البصرية</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service3" name="services" value="تصميم الأغلفة والمطبوعات">
+                            <label for="service3">تصميم الأغلفة والمطبوعات</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="service4" name="services" value="تصميم كامل الهوية">
+                            <label for="service4">تصميم كامل الهوية</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>ما ميزانيتك المتوقعة؟ *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="budget1" name="budget" value="أقل من 2000 ريال" required>
+                            <label for="budget1">أقل من 2000 ريال</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="budget2" name="budget" value="2000-5000 ريال">
+                            <label for="budget2">2000-5000 ريال</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="budget3" name="budget" value="5000-10000 ريال">
+                            <label for="budget3">5000-10000 ريال</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="budget4" name="budget" value="أكثر من 10000 ريال">
+                            <label for="budget4">أكثر من 10000 ريال</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-title">📞 بيانات التواصل</div>
+                
+                <div class="form-group">
+                    <label for="name">الاسم *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">رقم الجوال *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="05xxxxxxxxx" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">إرسال الاستبيان</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('surveyForm');
+        const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
+        const loading = document.getElementById('loading');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {
+                timestamp: new Date().toLocaleString('ar-SA'),
+                businessName: formData.get('businessName'),
+                field: formData.get('field'),
+                identity: formData.get('identity'),
+                colors: formData.get('colors'),
+                style: formData.get('style'),
+                audience: formData.get('audience'),
+                services: formData.getAll('services').join(', '),
+                budget: formData.get('budget'),
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                email: formData.get('email')
+            };
+            
+            try {
+                loading.style.display = 'block';
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'none';
+                
+                loading.style.display = 'none';
+                successMsg.style.display = 'block';
+                form.reset();
+                
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 5000);
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                errorMsg.textContent = 'حدث خطأ في الإرسال. تأكد من الاتصال بالإنترنت.';
+                errorMsg.style.display = 'block';
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
