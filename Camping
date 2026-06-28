@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استبيان الحملات الإعلانية - ويندو</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #0D5C4A 0%, #0a4839 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .form-content {
+            padding: 40px 30px;
+        }
+        
+        .section-title {
+            color: #0D5C4A;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: #0D5C4A;
+            border-radius: 2px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="url"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            color: #333;
+        }
+        
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="url"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #0D5C4A;
+            box-shadow: 0 0 0 3px rgba(13, 92, 74, 0.1);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+        
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        
+        .radio-item:hover,
+        .checkbox-item:hover {
+            background: #f5f5f5;
+        }
+        
+        input[type="radio"],
+        input[type="checkbox"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #0D5C4A;
+        }
+        
+        .checkbox-item label,
+        .radio-item label {
+            margin: 0;
+            font-weight: 500;
+            cursor: pointer;
+            flex: 1;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #0D5C4A 0%, #0a4839 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(13, 92, 74, 0.3);
+        }
+        
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            display: none;
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #0D5C4A;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #0D5C4A;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📢 استبيان الحملات الإعلانية</h1>
+            <p>دعنا نفهم احتياجاتك لننشئ حملة إعلانية متميزة وفعالة</p>
+        </div>
+        
+        <div class="form-content">
+            <div class="success-message" id="successMsg">✅ شكراً لك! تم استقبال بياناتك بنجاح. سنتواصل معك قريباً.</div>
+            <div class="error-message" id="errorMsg"></div>
+            <div class="loading" id="loading"><div class="spinner"></div> جاري الإرسال...</div>
+            
+            <form id="surveyForm">
+                <div class="section-title">🎯 معلومات الحملة</div>
+                
+                <div class="form-group">
+                    <label for="productName">اسم المنتج/الخدمة المراد الإعلان عنها *</label>
+                    <input type="text" id="productName" name="productName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>المرحلة الحالية *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="stage1" name="stage" value="منتج جديد" required>
+                            <label for="stage1">منتج جديد</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="stage2" name="stage" value="منتج موجود (زيادة المبيعات)">
+                            <label for="stage2">منتج موجود (زيادة المبيعات)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="stage3" name="stage" value="إعادة تموضع">
+                            <label for="stage3">إعادة تموضع</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>ما الهدف الرئيسي للحملة؟ *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="goal1" name="goal" value="زيادة الوعي بالعلامة" required>
+                            <label for="goal1">زيادة الوعي بالعلامة</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="goal2" name="goal" value="زيادة المبيعات/التحويلات">
+                            <label for="goal2">زيادة المبيعات/التحويلات</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="goal3" name="goal" value="جذب عملاء جدد">
+                            <label for="goal3">جذب عملاء جدد</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="goal4" name="goal" value="بناء ولاء العملاء">
+                            <label for="goal4">بناء ولاء العملاء</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-title">👥 الجمهور المستهدف</div>
+                
+                <div class="form-group">
+                    <label>السن المستهدف *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="age1" name="age" value="18-25" required>
+                            <label for="age1">18-25</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="age2" name="age" value="25-35">
+                            <label for="age2">25-35</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="age3" name="age" value="35-50">
+                            <label for="age3">35-50</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="age4" name="age" value="50+">
+                            <label for="age4">50+</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>النوع *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="gender1" name="gender" value="ذكور" required>
+                            <label for="gender1">ذكور</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="gender2" name="gender" value="إناث">
+                            <label for="gender2">إناث</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="gender3" name="gender" value="الاثنين">
+                            <label for="gender3">الاثنين</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>المنطقة الجغرافية *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="location1" name="location" value="محلي (السعودية فقط)" required>
+                            <label for="location1">محلي (السعودية فقط)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="location2" name="location" value="خليجي">
+                            <label for="location2">خليجي</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="location3" name="location" value="عربي">
+                            <label for="location3">عربي</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="location4" name="location" value="عالمي">
+                            <label for="location4">عالمي</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-title">📱 قنوات التواصل</div>
+                
+                <div class="form-group">
+                    <label>القنوات المفضلة *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel1" name="channels" value="السوشيال ميديا (إنستغرام، تويتر، تيك توك)">
+                            <label for="channel1">السوشيال ميديا (إنستغرام، تويتر، تيك توك)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel2" name="channels" value="جوجل إعلانات">
+                            <label for="channel2">جوجل إعلانات</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel3" name="channels" value="إعلانات فيسبوك/إنستغرام">
+                            <label for="channel3">إعلانات فيسبوك/إنستغرام</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel4" name="channels" value="تسويق المؤثرين">
+                            <label for="channel4">تسويق المؤثرين</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="channel5" name="channels" value="كل ما سبق">
+                            <label for="channel5">كل ما سبق</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>هل عندك حساب جاهز على المنصات؟ *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="account1" name="account" value="نعم" required>
+                            <label for="account1">نعم</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="account2" name="account" value="لا">
+                            <label for="account2">لا</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="account3" name="account" value="بعضها">
+                            <label for="account3">بعضها</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-title">💰 الميزانية والمدة</div>
+                
+                <div class="form-group">
+                    <label>الميزانية الشهرية *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="budget1" name="budget" value="أقل من 2000 ريال" required>
+                            <label for="budget1">أقل من 2000 ريال</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="budget2" name="budget" value="2000-5000 ريال">
+                            <label for="budget2">2000-5000 ريال</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="budget3" name="budget" value="5000-10000 ريال">
+                            <label for="budget3">5000-10000 ريال</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="budget4" name="budget" value="أكثر من 10000 ريال">
+                            <label for="budget4">أكثر من 10000 ريال</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>مدة الحملة المرغوبة *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="duration1" name="duration" value="شهر واحد" required>
+                            <label for="duration1">شهر واحد</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="duration2" name="duration" value="2-3 أشهر">
+                            <label for="duration2">2-3 أشهر</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="duration3" name="duration" value="6 أشهر">
+                            <label for="duration3">6 أشهر</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="duration4" name="duration" value="سنة كاملة">
+                            <label for="duration4">سنة كاملة</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="expectations">ما معدل التحويل/النتائج المتوقعة؟</label>
+                    <textarea id="expectations" name="expectations" placeholder="مثال: زيادة 30% في المبيعات، أو 5000 متابع جديد"></textarea>
+                </div>
+                
+                <div class="section-title">📊 الأداء الحالي</div>
+                
+                <div class="form-group">
+                    <label>هل لديك بيانات عن الأداء السابق؟ *</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="radio" id="data1" name="data" value="نعم" required>
+                            <label for="data1">نعم</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="radio" id="data2" name="data" value="لا">
+                            <label for="data2">لا</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section-title">📞 بيانات التواصل</div>
+                
+                <div class="form-group">
+                    <label for="name">الاسم *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">رقم الجوال *</label>
+                    <input type="tel" id="phone" name="phone" placeholder="05xxxxxxxxx" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">البريد الإلكتروني *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="website">موقع الويب (إن وجد)</label>
+                    <input type="url" id="website" name="website" placeholder="https://example.com">
+                </div>
+                
+                <button type="submit" class="submit-btn">إرسال الاستبيان</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('surveyForm');
+        const successMsg = document.getElementById('successMsg');
+        const errorMsg = document.getElementById('errorMsg');
+        const loading = document.getElementById('loading');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            const data = {
+                timestamp: new Date().toLocaleString('ar-SA'),
+                productName: formData.get('productName'),
+                stage: formData.get('stage'),
+                goal: formData.get('goal'),
+                age: formData.get('age'),
+                gender: formData.get('gender'),
+                location: formData.get('location'),
+                channels: formData.getAll('channels').join(', '),
+                account: formData.get('account'),
+                budget: formData.get('budget'),
+                duration: formData.get('duration'),
+                expectations: formData.get('expectations'),
+                data: formData.get('data'),
+                name: formData.get('name'),
+                phone: formData.get('phone'),
+                email: formData.get('email'),
+                website: formData.get('website')
+            };
+            
+            try {
+                loading.style.display = 'block';
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'none';
+                
+                loading.style.display = 'none';
+                successMsg.style.display = 'block';
+                form.reset();
+                
+                setTimeout(() => {
+                    successMsg.style.display = 'none';
+                }, 5000);
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                errorMsg.textContent = 'حدث خطأ في الإرسال. تأكد من الاتصال بالإنترنت.';
+                errorMsg.style.display = 'block';
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
